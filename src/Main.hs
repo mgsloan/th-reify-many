@@ -1,8 +1,9 @@
--- | Main entry point to the application.
 module Main where
 
--- | The main entry point.
-main :: IO ()
-main = do
-    putStrLn "Welcome to FP Haskell Center!"
-    putStrLn "Have a good day!"
+import Transitive
+import Language.Haskell.TH
+import Language.Haskell.TH.Lift
+import Language.Haskell.TH.Instances
+import Language.Haskell.Exts (Module)
+
+main = print $(getTypesTransitively ''Module >>= lift . map (nameBase . fst))
