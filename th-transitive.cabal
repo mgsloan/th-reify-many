@@ -1,0 +1,30 @@
+name:              th-transitive
+version:           0.0.0
+synopsis:          Transitively reify haskell datatype info
+description:
+license:           BSD3
+license-file:      LICENSE
+author:            Michael Sloan
+maintainer:        Michael Sloan <mgsloan at gmail>
+homepage:          http://github.com/mgsloan/th-transitive
+bug-reports:       http://github.com/mgsloan/th-transitive/issues
+category:          Template Haskell
+stability:         Experimental
+cabal-version:     >= 1.8
+build-type:        Simple
+source-repository head
+  type: git
+  location: git://github.com/mgsloan/th-transitive
+
+library
+    hs-source-dirs:  src
+    ghc-options:     -Wall
+    exposed-modules: Language.Haskell.TH.Transitive
+                     Language.Haskell.TH.Transitive.Internal
+
+    build-depends: base
+                 , containers
+                 , mtl
+                 , safe
+                 , template-haskell
+                 , th-lift

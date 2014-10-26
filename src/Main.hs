@@ -1,9 +1,21 @@
+{-# LANGUAGE TemplateHaskell #-}
+
 module Main where
 
-import Transitive
-import Language.Haskell.TH
-import Language.Haskell.TH.Lift
-import Language.Haskell.TH.Instances
+import GHC.Real (Ratio)
 import Language.Haskell.Exts (Module)
+import Language.Haskell.TH
+import Language.Haskell.TH.Instances
+import Language.Haskell.TH.Lift
+import Transitive
 
-main = print $(getTypesTransitively ''Module >>= lift . map (nameBase . fst))
+deriveLiftTransitively ''Module
+
+-- main = print $(getTypesTransitively ''Module >>= lift . map (nameBase . fst))
+
+-- main = print $(getInstances ''Show >>= lift)
+
+-- instance Show Module where
+--    show = undefined
+
+-- main = print $(getTypesTransitively ''Module >>= filterImplemented fst ''Show >>= lift . map (nameBase . fst))
