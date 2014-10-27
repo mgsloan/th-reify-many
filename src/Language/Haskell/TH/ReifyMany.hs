@@ -97,7 +97,7 @@ reifyManyTyCons recurse = reifyMany recurse'
     recurse' (name, TyConI dec) = recurse (name, dec)
     recurse' (_, PrimTyConI {}) = return (False, [])
     recurse' (_, info) = do
-        reportError $ "Unexpected info type in getTyConsTransitively: " ++ show info
+        report True $ "Unexpected info type in getTyConsTransitively: " ++ show info
         return (False, [])
 
 -- | Starting from a set of initial top level declarations, specified
