@@ -1,7 +1,8 @@
 module Language.Haskell.TH.ReifyMany.Internal where
 
-import Data.Maybe (mapMaybe)
+import Data.Maybe (catMaybes)
 import Language.Haskell.TH
+import Language.Haskell.TH.ExpandSyns (expandSyns)
 import Safe (headMay, tailMay)
 
 -- | Returns 'True' if the 'Dec' is a 'DataD' or 'NewtypeD'
@@ -53,16 +54,18 @@ data TypeclassInstance = TypeclassInstance Cxt Type [Dec]
     deriving Show
 
 -- | Given the 'Name' of a class, yield all of the
--- 'TypeclassInstance's.
+-- 'TypeclassInstance's, with synonyms expanded in the 'Type' field.
 getInstances :: Name -> Q [TypeclassInstance]
 getInstances clz = do
     res <- reify clz
     case res of
-        ClassI _ xs -> return $ mapMaybe convertDec xs
+        ClassI _ xs -> fmap catMaybes $ mapM convertDec xs
         _ -> fail $ "Error in getInstances: " ++ show clz ++ " isn't a class"
   where
-    convertDec (InstanceD ctxt typ decs) = Just (TypeclassInstance ctxt typ decs)
-    convertDec _ = Nothing
+    convertDec (InstanceD ctxt typ decs) = do
+        typ' <- expandSyns typ
+        return $ Just (TypeclassInstance ctxt typ' decs)
+    convertDec _ = return Nothing
 
 -- | Returns the first 'TypeclassInstance' where 'instanceMatches'
 -- returns true.

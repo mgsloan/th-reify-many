@@ -63,7 +63,7 @@ reifyManyWithoutInstances :: Name -> [Name] -> (Name -> Bool) -> Q [Name]
 reifyManyWithoutInstances clz initial recursePred = do
     insts <- getInstances clz
     let recurse (name, dec)
-            | recursePred name && isNothing (lookupInstance insts name) =
+            | recursePred name && isNothing (lookupInstance insts name) = do
                 return (isDataDec dec, decConcreteNames dec)
         recurse _ = return (False, [])
     infos <- reifyManyTyCons recurse initial
