@@ -1,5 +1,5 @@
 name:              th-reify-many
-version:           0.1.0
+version:           0.1.1
 synopsis:          Recurseively reify template haskell datatype info
 
 description:       @th-transitive@ provides functions for recursively reifying top
@@ -28,7 +28,7 @@ library
     -- Note: these lack version bounds because this library builds
     -- with the earliest and latest versions of all dependencies
     -- except for template-haskell.
-    build-depends: base
+    build-depends: base >= 4 && < 5
                  , containers
                  , mtl
                  , safe
