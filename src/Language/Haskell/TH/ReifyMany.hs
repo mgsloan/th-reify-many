@@ -1,4 +1,4 @@
--- | @th-transitive@ provides functions for recursively reifying top
+-- | @th-reify-many@ provides functions for recursively reifying top
 -- level declarations.  The main intended use case is for enumerating
 -- the names of datatypes reachable from an initial datatype, and
 -- passing these names to some function which generates instances.
@@ -69,7 +69,7 @@ reifyManyWithoutInstances clz initial recursePred = do
     infos <- reifyManyTyCons recurse initial
     return (map fst infos)
 
--- | Like 'reifyMany', but specialized for transitively enumerating
+-- | Like 'reifyMany', but specialized for recursively enumerating
 -- type constructor declarations, omitting 'PrimTyConI'.
 --
 -- In order to have this behave like 'reifyManyWithoutInstances', but
@@ -97,7 +97,7 @@ reifyManyTyCons recurse = reifyMany recurse'
     recurse' (name, TyConI dec) = recurse (name, dec)
     recurse' (_, PrimTyConI {}) = return (False, [])
     recurse' (_, info) = do
-        report True $ "Unexpected info type in getTyConsTransitively: " ++ show info
+        report True $ "Unexpected info type in reifyManyTyCons: " ++ show info
         return (False, [])
 
 -- | Starting from a set of initial top level declarations, specified
@@ -150,6 +150,6 @@ getDataTypesWithoutInstancesOf' clz tysFunc initial recursePred = do
                 State.when (not (null filtered)) $ reportError (show filtered)
                 return (isDataDec dec, concatMap typeConcreteNames filtered)
         recurse _ = return (False, [])
-    infos <- getTyConsTransitively recurse initial
+    infos <- reifyManyTyCons recurse initial
     return (map fst infos)
 -}

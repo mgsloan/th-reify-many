@@ -1,8 +1,8 @@
 name:              th-reify-many
-version:           0.1.1
+version:           0.1.2
 synopsis:          Recurseively reify template haskell datatype info
 
-description:       @th-transitive@ provides functions for recursively reifying top
+description:       @th-reify-many@ provides functions for recursively reifying top
                    level declarations.  The main intended use case is for enumerating
                    the names of datatypes reachable from an initial datatype, and
                    passing these names to some function which generates instances.
