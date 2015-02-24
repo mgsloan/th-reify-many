@@ -90,8 +90,8 @@ reifyManyWithoutInstances clz initial recursePred = do
 -- >      return []
 -- >  )
 reifyManyTyCons :: ((Name, Dec) -> Q (Bool, [Name]))
-                  -> [Name]
-                  -> Q [(Name, Info)]
+                -> [Name]
+                -> Q [(Name, Info)]
 reifyManyTyCons recurse = reifyMany recurse'
   where
     recurse' (name, TyConI dec) = recurse (name, dec)
