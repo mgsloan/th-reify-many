@@ -136,7 +136,7 @@ reifyMany recurse initial =
 -- typeclass.
 --
 -- FIXME: this code is disabled because "isInstance" doesn't do any
--- recursive instance resolution.  For exsample, it yields 'True' when
+-- recursive instance resolution.  For example, it yields 'True' when
 -- asked if the instance (Show [Int -> Int]) exists, since one exists
 -- for lists.
 {-
