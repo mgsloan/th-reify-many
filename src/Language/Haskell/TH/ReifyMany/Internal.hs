@@ -27,8 +27,13 @@ isNormalTyCon _ = False
 -- types of the fields.  In the case of a type synonyms, it just
 -- returns the body of the type synonym as a singleton list.
 decToFieldTypes :: Dec -> [[Type]]
+#if MIN_VERSION_template_haskell(2,11,0)
+decToFieldTypes (DataD _ _ _ _ cons _) = map conToFieldTypes cons
+decToFieldTypes (NewtypeD _ _ _ _ con _) = [conToFieldTypes con]
+#else
 decToFieldTypes (DataD _ _ _ cons _) = map conToFieldTypes cons
 decToFieldTypes (NewtypeD _ _ _ con _) = [conToFieldTypes con]
+#endif
 decToFieldTypes (TySynD _ _ ty) = [[ty]]
 decToFieldTypes _ = []
 
@@ -38,6 +43,10 @@ conToFieldTypes (NormalC _ xs) = map snd xs
 conToFieldTypes (RecC _ xs) = map (\(_, _, ty) -> ty) xs
 conToFieldTypes (InfixC (_, ty1) _ (_, ty2)) = [ty1, ty2]
 conToFieldTypes (ForallC _ _ con) = conToFieldTypes con
+#if MIN_VERSION_template_haskell(2,11,0)
+conToFieldTypes (GadtC _ xs _) = map snd xs
+conToFieldTypes (RecGadtC _ xs _) = map (\(_, _, ty) -> ty) xs
+#endif
 
 -- | Returns the names of all type constructors which aren't involved
 -- in constraints.
