@@ -76,7 +76,11 @@ getInstances clz = do
         _ -> fail $ "Error in getInstances: " ++ show clz ++ " isn't a class"
   where
 #if MIN_VERSION_template_haskell(2,7,0)
+#if MIN_VERSION_template_haskell(2,11,0)
+    convertDec (InstanceD _ ctxt typ decs) = do
+#else
     convertDec (InstanceD ctxt typ decs) = do
+#endif
         typ' <- expandSyns typ
         return $ Just (TypeclassInstance ctxt typ' decs)
     convertDec _ = return Nothing
