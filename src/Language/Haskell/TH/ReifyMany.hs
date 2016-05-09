@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 -- | @th-reify-many@ provides functions for recursively reifying top
 -- level declarations.  The main intended use case is for enumerating
 -- the names of datatypes reachable from an initial datatype, and
@@ -96,19 +97,21 @@ reifyManyTyCons recurse = reifyMany recurse'
   where
     recurse' (name, info) = do
         let skip thing = do
-                reportWarning $ "reifyManyTyCons skipping " ++ thing ++ " named " ++ pprint name
+                report False $ "reifyManyTyCons skipping " ++ thing ++ " named " ++ pprint name
                 return (False, [])
             unexpected thing = do
                 fail $ "reifyManyTyCons encountered unexpected " ++ thing ++ " named " ++ pprint name
         case info of
             TyConI dec -> recurse (name, dec)
             PrimTyConI{} -> skip "prim type constructor"
-            FamilyI{} -> skip "type or data family"
             DataConI{} -> skip "data constructor"
             ClassI{} -> skip "class"
             ClassOpI{} -> unexpected "class method"
             VarI{} -> unexpected "value variable"
             TyVarI{} -> unexpected "type variable"
+#if MIN_VERSION_template_haskell(2,6,0)
+            FamilyI{} -> skip "type or data family"
+#endif
 
 -- | Starting from a set of initial top level declarations, specified
 -- by @[Name]@, recursively enumerate other related declarations.  The
