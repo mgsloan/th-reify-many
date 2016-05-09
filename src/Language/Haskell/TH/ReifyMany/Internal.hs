@@ -100,7 +100,7 @@ lookupInstance xs n = headMay $ filter (`instanceMatches` n) xs
 -- the given 'TypeclassInstance'.
 instanceMatches :: TypeclassInstance -> Name -> Bool
 instanceMatches (TypeclassInstance _ typ _) n' =
-    case tailMay $ map (headMay . unAppsT) $ unAppsT typ  of
+    case tailMay $ map (headMay . unAppsT) $ unAppsT typ of
         Nothing -> False
         Just xs -> not $ null [() | Just (ConT n) <- xs, n == n']
 

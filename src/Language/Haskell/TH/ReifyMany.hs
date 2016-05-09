@@ -94,11 +94,21 @@ reifyManyTyCons :: ((Name, Dec) -> Q (Bool, [Name]))
                 -> Q [(Name, Info)]
 reifyManyTyCons recurse = reifyMany recurse'
   where
-    recurse' (name, TyConI dec) = recurse (name, dec)
-    recurse' (_, PrimTyConI {}) = return (False, [])
-    recurse' (_, info) = do
-        report True $ "Unexpected info type in reifyManyTyCons: " ++ show info
-        return (False, [])
+    recurse' (name, info) = do
+        let skip thing = do
+                reportWarning $ "reifyManyTyCons skipping " ++ thing ++ " named " ++ pprint name
+                return (False, [])
+            unexpected thing = do
+                fail $ "reifyManyTyCons encountered unexpected " ++ thing ++ " named " ++ pprint name
+        case info of
+            TyConI dec -> recurse (name, dec)
+            PrimTyConI{} -> skip "prim type constructor"
+            FamilyI{} -> skip "type or data family"
+            DataConI{} -> skip "data constructor"
+            ClassI{} -> skip "class"
+            ClassOpI{} -> unexpected "class method"
+            VarI{} -> unexpected "value variable"
+            TyVarI{} -> unexpected "type variable"
 
 -- | Starting from a set of initial top level declarations, specified
 -- by @[Name]@, recursively enumerate other related declarations.  The
