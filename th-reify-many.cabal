@@ -1,5 +1,5 @@
 name:              th-reify-many
-version:           0.1.5.1
+version:           0.1.5.2
 synopsis:          Recurseively reify template haskell datatype info
 
 description:       @th-reify-many@ provides functions for recursively reifying top
