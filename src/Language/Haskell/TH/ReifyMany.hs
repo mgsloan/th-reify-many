@@ -109,7 +109,7 @@ reifyManyTyCons recurse = reifyMany recurse'
             ClassOpI{} -> unexpected "class method"
             VarI{} -> unexpected "value variable"
             TyVarI{} -> unexpected "type variable"
-#if MIN_VERSION_template_haskell(2,6,0)
+#if MIN_VERSION_template_haskell(2,7,0)
             FamilyI{} -> skip "type or data family"
 #endif
 
