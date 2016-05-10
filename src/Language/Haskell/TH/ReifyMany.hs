@@ -132,14 +132,12 @@ reifyMany recurse initial =
             then return []
             else do
                 State.put (S.insert n seen)
-                minfo <- State.lift $ recover (return Nothing) (fmap Just (reify n))
-                case minfo of
-                    Just info -> do
-                        (shouldEmit, ns) <- State.lift $ recurse (n, info)
-                        (if shouldEmit
-                             then fmap ((n, info):)
-                             else id) $ fmap concat $ mapM go ns
-                    _ -> return []
+                info <- State.lift (reify n)
+                (shouldEmit, ns) <- State.lift $ recurse (n, info)
+                results <- fmap concat $ mapM go ns
+                if shouldEmit
+                    then return ((n, info) : results)
+                    else return results
 
 -- | Like 'getDatatypesWithoutInstanceOf', but more precise as it uses
 -- the 'isInstance' function
