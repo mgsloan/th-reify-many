@@ -96,8 +96,7 @@ reifyManyTyCons :: ((Name, Dec) -> Q (Bool, [Name]))
 reifyManyTyCons recurse = reifyMany recurse'
   where
     recurse' (name, info) = do
-        let skip thing = do
-                report False $ "reifyManyTyCons skipping " ++ thing ++ " named " ++ pprint name
+        let skip _ = do
                 return (False, [])
             unexpected thing = do
                 fail $ "reifyManyTyCons encountered unexpected " ++ thing ++ " named " ++ pprint name
