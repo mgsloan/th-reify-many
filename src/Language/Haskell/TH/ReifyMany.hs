@@ -111,6 +111,9 @@ reifyManyTyCons recurse = reifyMany recurse'
 #if MIN_VERSION_template_haskell(2,7,0)
             FamilyI{} -> skip "type or data family"
 #endif
+#if MIN_VERSION_template_haskell(2,12,0)
+            PatSynI{} -> skip "pattern synonym"
+#endif
 
 -- | Starting from a set of initial top level declarations, specified
 -- by @[Name]@, recursively enumerate other related declarations.  The
