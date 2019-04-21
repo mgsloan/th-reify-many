@@ -1,3 +1,8 @@
+# 0.1.9
+
+* Fixes a bug where the instance match predicate didn't work when
+  explicit kind signatures are used.
+
 # 0.1.8
 
 * Builds without warnings on GHC 8.2
