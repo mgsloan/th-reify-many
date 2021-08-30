@@ -100,7 +100,11 @@ lookupInstance xs n = headMay $ filter (`instanceMatches` n) xs
 -- the given 'TypeclassInstance'.
 instanceMatches :: TypeclassInstance -> Name -> Bool
 instanceMatches (TypeclassInstance _ typ _) n' =
-    case tailMay $ map (fmap unSigT . headMay . unAppsT) $ unAppsT typ of
+    -- We call unSigT to prevent outermost kind signatures from affecting the
+    -- results. We also call unSigT a second time on the head of the
+    -- application, as older versions of th-expand-syns incorrectly pushed
+    -- kind signatures inwards when expanding type synonyms. (See #9.)
+    case tailMay $ map (fmap unSigT . headMay . unAppsT . unSigT) $ unAppsT typ of
         Nothing -> False
         Just xs -> not $ null [() | Just (ConT n) <- xs, n == n']
 
