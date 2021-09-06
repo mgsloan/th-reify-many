@@ -1,3 +1,9 @@
+# 0.1.10
+
+* Fixes a bug where the results of `expandSyns` was assumed to only contain one layer of `AppsT`. See [#9][].
+
+[#9]: https://github.com/mgsloan/th-reify-many/issues/9
+
 # 0.1.9
 
 * Fixes a bug where the instance match predicate didn't work when
